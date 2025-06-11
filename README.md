@@ -1,8 +1,10 @@
 # fc-pos-go-labs-deploy-cloudrun
 
-**Objetivo:** Desenvolver um sistema em Go que receba um CEP, identifica a cidade e retorna o clima atual (temperatura em graus celsius, fahrenheit e kelvin). Esse sistema deverá ser publicado no Google Cloud Run.
+## Descrição do desafio
+```
+Objetivo: Desenvolver um sistema em Go que receba um CEP, identifica a cidade e retorna o clima atual (temperatura em graus celsius, fahrenheit e kelvin). Esse sistema deverá ser publicado no Google Cloud Run.
 
-**Requisitos:**
+Requisitos:
 
 O sistema deve receber um CEP válido de 8 digitos
 O sistema deve realizar a pesquisa do CEP e encontrar o nome da localização, a partir disso, deverá retornar as temperaturas e formata-lás em: Celsius, Fahrenheit, Kelvin.
@@ -18,7 +20,7 @@ Código HTTP: 404
 Mensagem: can not find zipcode
 Deverá ser realizado o deploy no Google Cloud Run.
 
-**Dicas:**
+Dicas:
 
 Utilize a API viaCEP (ou similar) para encontrar a localização que deseja consultar a temperatura: https://viacep.com.br/
 Utilize a API WeatherAPI (ou similar) para consultar as temperaturas desejadas: https://www.weatherapi.com/
@@ -28,9 +30,10 @@ Sendo F = Fahrenheit
 Sendo C = Celsius
 Sendo K = Kelvin
 
-**Entrega:**
+Entrega:
 
 O código-fonte completo da implementação.
 Testes automatizados demonstrando o funcionamento.
 Utilize docker/docker-compose para que possamos realizar os testes de sua aplicação.
 Deploy realizado no Google Cloud Run (free tier) e endereço ativo para ser acessado.
+```
