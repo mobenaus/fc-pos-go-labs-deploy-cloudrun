@@ -27,27 +27,66 @@ type TempResponse struct {
 	TempK float64 `json:"temp_K"`
 }
 
+type IApiClient interface {
+	getCityByCEP(cep string) (string, error)
+	getTemperatureByCity(cep string) (float64, error)
+}
+
+type ApiClient struct {
+	httpGet        func(url string) (resp *http.Response, err error)
+	wheatherApiKey string
+}
+
+func NewClient(
+	httpGet func(url string) (resp *http.Response, err error),
+	wheatherApiKey string,
+) *ApiClient {
+	return &ApiClient{
+		httpGet:        httpGet,
+		wheatherApiKey: wheatherApiKey,
+	}
+}
+
+type WeatherHandler struct {
+	apiClient IApiClient
+}
+
+func NewWeatherHandler(apiClient IApiClient) *WeatherHandler {
+	return &WeatherHandler{
+		apiClient: apiClient,
+	}
+}
+
 func main() {
-	http.HandleFunc("/weather", weatherHandler)
+
+	apiKey := os.Getenv("WEATHERAPI_KEY")
+	if apiKey == "" {
+		log.Fatalf("weatherapi key not set")
+	}
+	client := NewClient(http.Get, apiKey)
+	wh := NewWeatherHandler(client)
+
+	http.HandleFunc("/weather", wh.weatherHandler)
 	log.Printf("Listening on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-func weatherHandler(w http.ResponseWriter, r *http.Request) {
+func (wh *WeatherHandler) weatherHandler(w http.ResponseWriter, r *http.Request) {
 	cep := r.URL.Query().Get("cep")
-	if !isValidCEP(cep) {
+
+	if !isValidCEP(cep) { // retorna o erro 422
 		http.Error(w, "invalid zipcode", http.StatusUnprocessableEntity)
 		return
 	}
 
-	city, err := getCityByCEP(cep)
-	if err != nil {
+	city, err := wh.apiClient.getCityByCEP(cep)
+	if err != nil { // retorna o erro 404
 		http.Error(w, "can not find zipcode", http.StatusNotFound)
 		return
 	}
 
-	tempC, err := getTemperatureByCity(city)
-	if err != nil {
+	tempC, err := wh.apiClient.getTemperatureByCity(city)
+	if err != nil { // retorna 404 caso a cidade do cep não seja encontrada
 		println(err.Error())
 		http.Error(w, "can not find temperature", http.StatusNotFound)
 		return
@@ -68,8 +107,8 @@ func isValidCEP(cep string) bool {
 	return re.MatchString(cep)
 }
 
-func getCityByCEP(cep string) (string, error) {
-	resp, err := http.Get(fmt.Sprintf("https://viacep.com.br/ws/%s/json/", cep))
+func (c *ApiClient) getCityByCEP(cep string) (string, error) {
+	resp, err := c.httpGet(fmt.Sprintf("https://viacep.com.br/ws/%s/json/", cep))
 	if err != nil {
 		return "", err
 	}
@@ -86,13 +125,9 @@ func getCityByCEP(cep string) (string, error) {
 	return viaCEP.Localidade, nil
 }
 
-func getTemperatureByCity(city string) (float64, error) {
-	apiKey := os.Getenv("WEATHERAPI_KEY")
-	if apiKey == "" {
-		return 0, fmt.Errorf("weatherapi key not set")
-	}
-	url := fmt.Sprintf("https://api.weatherapi.com/v1/current.json?key=%s&q=%s", apiKey, city)
-	resp, err := http.Get(url)
+func (c *ApiClient) getTemperatureByCity(city string) (float64, error) {
+	url := fmt.Sprintf("https://api.weatherapi.com/v1/current.json?key=%s&q=%s", c.wheatherApiKey, city)
+	resp, err := c.httpGet(url)
 	if err != nil {
 		return 0, err
 	}
