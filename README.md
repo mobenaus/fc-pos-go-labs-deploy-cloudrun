@@ -46,6 +46,7 @@ Passos para o deploy:
 - push da imagem para o registry:
 ```docker push us-central1-docker.pkg.dev/laboratorio-curso-fc/go-expert/weater:latest```
 - deploy da aplicação no cloud run:
+  - a variavel WEATHERAPI_KEY é a API Key para https://www.weatherapi.com/
 ```
 gcloud run deploy \
     go-expert-lab-cloud-run \
