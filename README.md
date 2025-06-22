@@ -76,6 +76,9 @@ Service URL: https://go-expert-lab-cloud-run-214222014794.us-central1.run.app
 ```
 ## Testes
 
+Para testes locais pode ser utilizado o arquivo testes-locais.http com a extensão REST Client no VSCode
+Para testes com o Cloud Run utilizar o arquivo testes-cloudrun.http com a extensão REST Client no VSCode
+
 
 
 
