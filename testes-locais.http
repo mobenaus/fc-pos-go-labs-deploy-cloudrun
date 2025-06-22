@@ -1,0 +1,12 @@
+### teste cep invalido
+GET  http://localhost:8080/weather?cep=011000 HTTP/1.1
+
+### teste cep inexistente
+GET  http://localhost:8080/weather?cep=12345678 HTTP/1.1
+
+### teste encontrar temperatura para uma cidade com nome simples (Joinville)
+GET  http://localhost:8080/weather?cep=89217001 HTTP/1.1
+
+### teste encontrar temperatura para uma cidade com mais de um nome (São Paulo)
+GET  http://localhost:8080/weather?cep=01001000 HTTP/1.1
+

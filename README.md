@@ -37,3 +37,44 @@ Testes automatizados demonstrando o funcionamento.
 Utilize docker/docker-compose para que possamos realizar os testes de sua aplicação.
 Deploy realizado no Google Cloud Run (free tier) e endereço ativo para ser acessado.
 ```
+## Deployment
+
+Passos para o deploy:
+- Criado um artifact registry no GCP
+- build local da aplicação com:
+```docker build . -t us-central1-docker.pkg.dev/laboratorio-curso-fc/go-expert/weater```
+- push da imagem para o registry:
+```docker push us-central1-docker.pkg.dev/laboratorio-curso-fc/go-expert/weater:latest```
+- deploy da aplicação no cloud run:
+```
+gcloud run deploy \
+    go-expert-lab-cloud-run \
+    --allow-unauthenticated \
+    --region=us-central1 \
+    --image us-central1-docker.pkg.dev/laboratorio-curso-fc/go-expert/weater:latest \
+    --port 8080 \
+    --set-env-vars "WEATHERAPI_KEY=$WEATHERAPI_KEY"
+```
+resultado:
+```
+➜  fc-pos-go-labs-deploy-cloudrun git:(main) gcloud run deploy \
+    go-expert-lab-cloud-run \
+    --allow-unauthenticated \
+    --region=us-central1 \
+    --image us-central1-docker.pkg.dev/laboratorio-curso-fc/go-expert/weater:latest \
+    --port 8080 \
+    --set-env-vars "WEATHERAPI_KEY=$WEATHERAPI_KEY"
+Deploying container to Cloud Run service [go-expert-lab-cloud-run] in project [laboratorio-curso-fc] region [us-central1]
+✓ Deploying new service... Done.                                                                                                                                                                                                                    
+  ✓ Creating Revision...                                                                                                                                                                                                                            
+  ✓ Routing traffic...                                                                                                                                                                                                                              
+  ✓ Setting IAM Policy...                                                                                                                                                                                                                           
+Done.                                                                                                                                                                                                                                               
+Service [go-expert-lab-cloud-run] revision [go-expert-lab-cloud-run-00001-8tz] has been deployed and is serving 100 percent of traffic.
+Service URL: https://go-expert-lab-cloud-run-214222014794.us-central1.run.app
+```
+## Testes
+
+
+
+

@@ -1,0 +1,12 @@
+### teste cep invalido
+GET  http://go-expert-lab-cloud-run-214222014794.us-central1.run.app/weather?cep=011000 HTTP/1.1
+
+### teste cep inexistente
+GET  http://go-expert-lab-cloud-run-214222014794.us-central1.run.app/weather?cep=12345678 HTTP/1.1
+
+### teste encontrar temperatura para uma cidade com nome simples (Joinville)
+GET  http://go-expert-lab-cloud-run-214222014794.us-central1.run.app/weather?cep=89217001 HTTP/1.1
+
+### teste encontrar temperatura para uma cidade com mais de um nome (São Paulo)
+GET  http://go-expert-lab-cloud-run-214222014794.us-central1.run.app/weather?cep=01001000 HTTP/1.1
+
