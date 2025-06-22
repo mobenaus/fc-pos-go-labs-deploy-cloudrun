@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"regexp"
 )
@@ -126,7 +127,7 @@ func (c *ApiClient) getCityByCEP(cep string) (string, error) {
 }
 
 func (c *ApiClient) getTemperatureByCity(city string) (float64, error) {
-	url := fmt.Sprintf("https://api.weatherapi.com/v1/current.json?key=%s&q=%s", c.wheatherApiKey, city)
+	url := fmt.Sprintf("https://api.weatherapi.com/v1/current.json?key=%s&q=%s", c.wheatherApiKey, url.QueryEscape(city))
 	resp, err := c.httpGet(url)
 	if err != nil {
 		return 0, err
